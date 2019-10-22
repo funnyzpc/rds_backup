@@ -10,8 +10,10 @@ import (
 )
 
 /**
-srcFilePath: 压缩包路径
-destDirPath： 解压文件释放目录
+@description tar.gz文件解压缩
+@description
+@srcFilePath: 压缩包路径
+@destDirPath： 解压文件释放目录
 */
 func UnTarGz(srcFilePath string, destDirPath string) error {
 	log.Println("UnTarGz Params  :", srcFilePath, destDirPath)
@@ -19,14 +21,14 @@ func UnTarGz(srcFilePath string, destDirPath string) error {
 	os.Mkdir(destDirPath, os.ModePerm)
 	fr, err := os.Open(srcFilePath)
 	if nil != err {
-		log.Println("打开文件失败 %s", err)
+		log.Println("打开文件失败 :", err)
 		return err
 	}
 	defer fr.Close()
 	// Gzip reader
 	gr, err := gzip.NewReader(fr)
 	if nil != err {
-		log.Println("读取文件失败 %s", err)
+		log.Println("读取文件失败 :", err)
 		// return err
 	}
 	// Tar reader
@@ -38,16 +40,13 @@ func UnTarGz(srcFilePath string, destDirPath string) error {
 			break
 		}
 		if err == io.EOF {
-			log.Println("读取文件失败: %s", err)
+			log.Println("读取文件失败:", err)
 			break
 			// return err
 		}
-		//handleError(err)
-		log.Println("UnTarGz file: " + hdr.Name)
+		log.Println("UnTarGz file: ", hdr.Name)
 		// Check if it is diretory or file
 		if hdr.Typeflag != tar.TypeDir {
-			// Get files from archive
-			// Create diretory before create file
 			os.MkdirAll(destDirPath+"/"+path.Dir(hdr.Name), os.ModePerm)
 			// Write data to file
 			fw, err := os.Create(destDirPath + "/" + hdr.Name)

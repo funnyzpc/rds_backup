@@ -8,8 +8,9 @@ import (
 )
 
 /**
-url: 下载地址
-filePath: 文件目录
+@description 下载文件
+@url: 下载地址
+@filePath: 文件目录
 */
 func DownloadFile(url string, filePath string) error {
 	// Create the file

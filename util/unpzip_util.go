@@ -8,7 +8,12 @@ import (
 	"path/filepath"
 )
 
-/** 解压缩文件 **/
+/**
+	@description 解压缩文件
+	@fullZipFile zip文件所在的全路径
+	@releaseDir 解压文件释放路径
+	@password 解压密码
+**/
 func UnzipWithPasword(fullZipFile string, releaseDir string, password string) bool {
 	r, err := zip.OpenReader(fullZipFile)
 	if err != nil {

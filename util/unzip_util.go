@@ -9,10 +9,12 @@ import (
 )
 
 /**
-	解压缩文件
+	@description 解压缩文件
+	@src zip文件所在路径
+	@dest 解压文件释放路径
 **/
-func Unzip(src string, dest string) error {
-	r, err := zip.OpenReader(src)
+func Unzip(fullZipFile string, releaseDir string) error {
+	r, err := zip.OpenReader(fullZipFile)
 	if err != nil {
 		return err
 	}
@@ -21,9 +23,7 @@ func Unzip(src string, dest string) error {
 			panic(err)
 		}
 	}()
-
-	os.MkdirAll(dest, 0755)
-
+	os.MkdirAll(releaseDir, 0755)
 	// Closure to address file descriptors issue with all the deferred .Close() methods
 	extractAndWriteFile := func(f *zip.File) error {
 		rc, err := f.Open()
@@ -35,7 +35,7 @@ func Unzip(src string, dest string) error {
 				panic(err)
 			}
 		}()
-		path := filepath.Join(dest, f.Name)
+		path := filepath.Join(releaseDir, f.Name)
 		if f.FileInfo().IsDir() {
 			os.MkdirAll(path, f.Mode())
 		} else {
@@ -49,7 +49,6 @@ func Unzip(src string, dest string) error {
 					panic(err)
 				}
 			}()
-
 			_, err = io.Copy(f, rc)
 			if err != nil {
 				return err
